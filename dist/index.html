@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Выбор формы бизнеса</title>
+<style>
+body { font-family: Arial, sans-serif; max-width: 800px; margin: 30px auto; padding: 0 15px; line-height: 1.5; }
+h1 { font-size: 24px; }
+h2 { font-size: 20px; }
+label { display: block; margin-top: 15px; }
+select, input { box-sizing: border-box; width: 100%; padding: 8px; margin-top: 5px; font: inherit; }
+button { margin-top: 20px; padding: 10px 15px; font: inherit; cursor: pointer; }
+#result { margin-top: 25px; padding: 15px; border: 1px solid #aaa; background: #f5f5f5; }
+.note { color: #555; font-size: 14px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { border: 1px solid #aaa; padding: 8px; text-align: left; vertical-align: top; }
+.table-wrap { overflow-x: auto; }
+table { min-width: 650px; }
+input[type="checkbox"] { width: auto; }
+details { margin-top: 15px; }
+button { margin-right: 5px; }
+@media print { form, .examples, #actions, #comparison, .instructions { display: none; } body { max-width: none; } }
+</style>
+</head>
+<body>
+<h1>Выбор организационно-правовой формы</h1>
+<p>Учебный инструмент для выбора формы бизнеса в России.</p>
+<form id="form">
+<label for="activity">Вид деятельности</label>
+<select id="activity">
+<option value="services">Услуги</option>
+<option value="trade">Торговля</option>
+<option value="production">Производство</option>
+<option value="it">IT и цифровые продукты</option>
+<option value="agriculture">Сельское хозяйство</option>
+<option value="regulated">Финансы, страхование и другие специальные отрасли</option>
+<option value="other">Другая деятельность</option>
+</select>
+<label for="scale">Масштаб бизнеса</label>
+<select id="scale">
+<option value="small">Малый</option>
+<option value="medium">Средний</option>
+<option value="large">Крупный</option>
+</select>
+<label for="founders">Количество учредителей (включая вас)</label>
+<input id="founders" type="number" min="1" max="100000" step="1" value="1" required>
+<label for="investment">Привлечение инвестиций</label>
+<select id="investment">
+<option value="none">Свои средства или кредит</option>
+<option value="partner">Инвестор через долю в бизнесе</option>
+<option value="shares">Частные инвестиции через акции</option>
+<option value="public">Публичное размещение акций</option>
+</select>
+<label for="liability">Ответственность</label>
+<select id="liability">
+<option value="limited">Хочу ограничить риск своим вкладом</option>
+<option value="personal">Готов отвечать личным имуществом</option>
+</select>
+
+<details>
+<summary>Дополнительные условия</summary>
+<label for="capital">Доступно для уставного капитала, рублей (необязательно)</label>
+<input id="capital" type="number" min="0" max="1000000000000" step="0.01" placeholder="Не определено">
+<label><input id="teamwork" type="checkbox"> Участники будут совместно работать в общем деле</label>
+<p class="note">Капитал — вклад в компанию, а не весь бюджет запуска. Совместное участие нужно для проверки кооперативной модели.</p>
+</details>
+<button type="reset">Сбросить</button>
+<button type="submit">Получить рекомендацию</button>
+</form>
+
+<div class="examples">
+<p>Примеры:
+<button type="button" data-example="solo">Фрилансер</button>
+<button type="button" data-example="partners">Мастерская</button>
+<button type="button" data-example="growth">IT-компания</button>
+</p>
+</div>
+<section id="result"  aria-live="polite" hidden></section>
+<p class="note">Рассматриваются ИП, ООО, непубличное АО, ПАО и производственный кооператив. Это упрощённая учебная модель. Для специальных и лицензируемых отраслей нужна отдельная проверка.</p>
+<p class="note">ИП — статус физического лица без создания юридического лица. Ограниченная ответственность имеет исключения. Налоговый режим выбирается отдельно.</p>
+
+<section id="comparison">
+<h2>Сравнение форм бизнеса</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Форма</th><th>Участники</th><th>Капитал</th><th>Ответственность</th><th>Налоги (при соблюдении условий)</th></tr></thead>
+<tbody id="comparison-body"></tbody>
+</table></div>
+<p class="note">ИП не создаёт юридическое лицо. ПАО — публичная разновидность АО. НПД — налоговый режим, а не ОПФ. У специальных отраслей требования к форме и капиталу могут быть выше.</p>
+</section>
+<section class="instructions">
+<h2>Как пользоваться</h2>
+<p>Выберите пять параметров, при желании уточните капитал и совместный труд. Нажмите «Получить рекомендацию». Изучите причины выбора, преимущества, ограничения и альтернативы. Результат можно сохранить в TXT или распечатать. После изменения параметров повторите подбор.</p>
+<details><summary>Как работает алгоритм</summary>
+<p>Сначала исключаются несовместимые варианты: учитываются число участников, ответственность и способ инвестирования. Затем выбирается основной вариант. Для небольшого самостоятельного дела модель предпочитает ИП, для совместного труда пяти и более участников — кооператив, для долевого участия — ООО, для акций — АО или ПАО. Деятельность и масштаб уточняют предпочтения. Остальные допустимые формы показываются как альтернативы.</p>
+<p>Это учебные предпочтения, а не запрет работать в другой допустимой форме. Для финансовых и специальных отраслей автоматический выбор не выполняется. В сельском хозяйстве дополнительно рассматривают КФХ и сельхозкооператив; они не входят в общий рейтинг.</p>
+</details>
+<details><summary>Источники</summary>
+<p>Основные нормы сверены 14.11.2026. Перед регистрацией проверьте действующие требования.</p>
+<ul>
+<li><a href="https://service.nalog.ru/gosreg/i/intro.html?sfrd=11001" target="_blank" rel="noopener">ФНС: регистрация ООО и капитал</a></li>
+<li><a href="https://www.consultant.ru/document/cons_doc_LAW_5142/9c990a21643b62055564ca244551f1515cb8f138/" target="_blank" rel="noopener">ГК РФ, статья 88: участники ООО</a></li>
+<li><a href="https://www.consultant.ru/document/cons_doc_LAW_8743/00b760115572795d7920c45b910ba539527d0736/" target="_blank" rel="noopener">208-ФЗ, статья 26: капитал АО</a></li>
+<li><a href="https://www.nalog.gov.ru/html/sites/www.rn62.nalog.ru/zakon/99-%D0%A4%D0%97_20140505.pdf" target="_blank" rel="noopener">99-ФЗ: положения ГК РФ о кооперативах</a></li>
+<li><a href="https://www.nalog.gov.ru/rn77/taxation/taxes/usn/" target="_blank" rel="noopener">ФНС: УСН</a></li>
+<li><a href="https://www.nalog.gov.ru/rn77/taxation/taxes/patent/" target="_blank" rel="noopener">ФНС: ПСН</a></li>
+<li><a href="https://npd.nalog.ru/" target="_blank" rel="noopener">ФНС: НПД</a></li>
+</ul>
+</details>
+</section>
+<script>
+// Данные для отображения результата.
+const forms = {
+  ip: {
+    name: 'ИП — индивидуальный предприниматель',
+    description: 'Для одного владельца, готового к личной имущественной ответственности.',
+    advantages: ['Не нужен уставный капитал.', 'Простое единоличное управление.', 'Возможна ПСН при соблюдении условий.'],
+    limitation: 'Нет долей для совладельцев. ИП отвечает личным имуществом, кроме защищённого законом от взыскания.'
+  },
+  llc: {
+    name: 'ООО — общество с ограниченной ответственностью',
+    description: 'Компания с капиталом, разделённым на доли. От 1 до 50 участников.',
+    advantages: ['В общем случае риск ограничен стоимостью доли.', 'Можно работать с партнёрами.', 'Инвестор может войти в компанию через долю.'],
+    limitation: 'Общий минимум уставного капитала — 10 000 рублей. Нужны бухгалтерский учёт и корпоративные документы.'
+  },
+  ao: {
+    name: 'АО — непубличное акционерное общество',
+    description: 'Компания с капиталом, разделённым на акции.',
+    advantages: ['Инвестиции через акции.', 'Нет предела в 50 собственников.', 'В общем случае риск ограничен стоимостью акций.'],
+    limitation: 'Общий минимум капитала — 10 000 рублей. Нужны оформление выпуска акций и реестр у регистратора. Публичное размещение требует публичного статуса.'
+  }
+};
+
+
+// Справочные данные для таблицы и проверки капитала.
+Object.assign(forms.ip, { capital: 0, people: '1 человек', capitalText: 'Не требуется', risk: 'Личным имуществом с законными исключениями', taxes: 'ОСНО; УСН, ПСН, НПД при соблюдении условий' });
+Object.assign(forms.llc, { capital: 10000, people: '1–50 участников', capitalText: 'От 10 000 ₽', risk: 'В общем случае в пределах доли', taxes: 'ОСНО; УСН при соблюдении условий' });
+Object.assign(forms.ao, { capital: 10000, people: 'От 1 акционера', capitalText: 'От 10 000 ₽', risk: 'В общем случае в пределах акций', taxes: 'ОСНО; УСН при соблюдении условий' });
+forms.pao = {
+  name: 'ПАО — публичное акционерное общество',
+  description: 'Публичная разновидность АО для привлечения широкого круга акционеров.',
+  advantages: ['Возможно публичное размещение акций.', 'Нет предела в 50 акционеров.', 'Акционерная структура капитала.'],
+  limitation: 'Нужны публичный статус, эмиссионные процедуры и раскрытие информации. Регистрация сама по себе не означает допуск к биржевым торгам.',
+  capital: 100000, people: 'От 1 акционера', capitalText: 'От 100 000 ₽',
+  risk: 'В общем случае в пределах акций', taxes: 'ОСНО; спецрежимы проверяются отдельно'
+};
+forms.coop = {
+  name: 'ПК — производственный кооператив',
+  description: 'Объединение для совместной деятельности на основе членства, паевых взносов и трудового или иного участия.',
+  advantages: ['Подходит для совместного труда.', 'Один член — один голос.', 'Размер паевых взносов определяется уставом.'],
+  limitation: 'Члены несут субсидиарную ответственность по правилам закона и устава. Нужно согласовать участие и распределение результатов.',
+  capital: 0, people: 'От 5 членов', capitalText: 'Паи по уставу',
+  risk: 'Субсидиарная', taxes: 'ОСНО; УСН при соблюдении условий'
+};
+
+// Сначала проверяем ограничения, затем выбираем предпочтительный вариант.
+function recommend(p) {
+  if (!Number.isInteger(p.founders) || p.founders < 1 || p.founders > 100000)
+    return { error: 'Введите целое число учредителей от 1 до 100 000.' };
+  if (p.capital !== null && (!Number.isFinite(p.capital) || p.capital < 0 || p.capital > 1e12))
+    return { error: 'Введите неотрицательный капитал до 1 000 000 000 000 рублей или оставьте поле пустым.' };
+  if (p.activity === 'regulated')
+    return { specialist: true, message: 'Нужна отраслевая проверка. Уточните точный вид деятельности, требования регулятора к форме и капиталу, лицензирование и состав учредителей.' };
+
+  const excluded = {};
+  const reasons = {};
+  for (const id of Object.keys(forms)) {
+    excluded[id] = [];
+    reasons[id] = [];
+  }
+  if (p.founders !== 1) excluded.ip.push('ИП не предусматривает нескольких совладельцев.');
+  if (p.liability === 'limited') excluded.ip.push('ИП предполагает личную имущественную ответственность.');
+  if (p.investment !== 'none') excluded.ip.push('У ИП нет долей или акций для входа инвестора в капитал.');
+  if (p.founders > 50) excluded.llc.push('В ООО не может быть более 50 участников.');
+  if (['shares', 'public'].includes(p.investment)) excluded.llc.push('ООО не выпускает акции.');
+  if (p.investment === 'public') excluded.ao.push('Публичное размещение требует публичного статуса.');
+  if (p.investment !== 'public') excluded.pao.push('Публичное размещение не заявлено: модель не предлагает избыточный публичный статус.');
+  if (p.founders < 5) excluded.coop.push('Нужно минимум 5 членов.');
+  if (!p.teamwork) excluded.coop.push('Не подтверждено совместное участие членов в деятельности.');
+  if (p.liability === 'limited') excluded.coop.push('У членов есть субсидиарная ответственность.');
+  if (p.investment !== 'none') excluded.coop.push('Для выбранного инвестиционного сценария модель предпочитает хозяйственное общество.');
+  if (p.activity === 'agriculture') excluded.coop.push('Сельхозкооператив требует отдельной отраслевой проверки.');
+
+  reasons.ip = ['Один владелец, совладельцы и долевые инвесторы не требуются.', 'Вы допускаете личную имущественную ответственность.'];
+  reasons.llc = ['Число участников укладывается в предел от 1 до 50.', 'Можно распределить доли и принять инвестора без выпуска акций.'];
+  if (p.liability === 'limited') reasons.llc.push('В общем случае риск участника ограничен стоимостью доли.');
+  reasons.ao = ['Акционерная форма позволяет привлекать капитал через акции.'];
+  if (p.founders > 50) reasons.ao.push('Предел ООО в 50 участников не подходит.');
+  reasons.pao = ['Вы планируете публичное размещение акций.'];
+  reasons.coop = ['Есть минимум 5 членов и подтверждено совместное участие.', 'Вы допускаете личную, в том числе субсидиарную, ответственность.'];
+
+  let preferred = 'llc';
+  if (p.investment === 'public') preferred = 'pao';
+  else if (p.investment === 'shares' || p.founders > 50) preferred = 'ao';
+  else if (!excluded.coop.length && p.activity === 'production') preferred = 'coop';
+  else if (!excluded.ip.length && p.scale === 'small' && p.activity !== 'production') preferred = 'ip';
+
+  const candidates = Object.keys(forms).filter(id => !excluded[id].length);
+  // Переносим предпочтительный вариант в начало, остальные оставляем альтернативами.
+  candidates.sort((a, b) => (b === preferred ? 1 : 0) - (a === preferred ? 1 : 0));
+  const main = candidates[0];
+  if (p.activity === 'production') reasons[main].push('Для производства модель предпочитает отдельную компанию или кооператив с собственным имуществом.');
+  if (p.scale !== 'small') reasons[main].push('Для среднего и крупного бизнеса модель предпочитает корпоративную структуру. Масштаб сам по себе не обязывает к АО.');
+  const warnings = [
+    'Ограниченная ответственность имеет исключения, включая личные поручительства и субсидиарную ответственность.',
+    'Общий минимум капитала не равен бюджету запуска. Для отдельных отраслей требования выше.',
+    'Налоговый режим и официальный статус МСП проверяются отдельно.'
+  ];
+  if (p.activity === 'agriculture') warnings.push('Для сельского хозяйства дополнительно рассмотрите КФХ, сельхозкооператив и условия ЕСХН.');
+  if (p.activity === 'other') warnings.push('Уточните ОКВЭД, допустимые формы и лицензирование для конкретного вида деятельности.');
+  return { candidates, excluded, reasons, warnings };
+}
+
+const form = document.getElementById('form');
+const result = document.getElementById('result');
+let report = '';
+const rubles = value => value.toLocaleString('ru-RU') + ' ₽';
+const list = items => '<ul>' + items.map(item => '<li>' + item + '</li>').join('') + '</ul>';
+
+function readParameters() {
+  return {
+    activity: document.getElementById('activity').value,
+    scale: document.getElementById('scale').value,
+    founders: Number(document.getElementById('founders').value),
+    investment: document.getElementById('investment').value,
+    liability: document.getElementById('liability').value,
+    capital: document.getElementById('capital').value === '' ? null : Number(document.getElementById('capital').value),
+    teamwork: document.getElementById('teamwork').checked
+  };
+}
+
+function formDescription(id, p, answer) {
+  const f = forms[id];
+  let capitalNote = '';
+  if (p.capital !== null && p.capital < f.capital)
+    capitalNote = '<p><b>Рекомендация условная:</b> до общего минимума капитала недостаёт ' + rubles(f.capital - p.capital) + '. Предусмотрите эти средства.</p>';
+  return '<h3>' + f.name + '</h3><p>' + f.description + '</p>'
+    + '<p><b>Участники:</b> ' + f.people + '. <b>Капитал:</b> ' + f.capitalText + '.</p>'
+    + capitalNote + '<b>Почему подходит:</b>' + list(answer.reasons[id])
+    + '<b>Преимущества:</b>' + list(f.advantages)
+    + '<p><b>Что учесть:</b> ' + f.limitation + '</p>'
+    + '<p><b>Налоги:</b> ' + f.taxes + '.</p>';
+}
+
+function showRecommendation() {
+  const p = readParameters();
+  const answer = recommend(p);
+  if (answer.error) {
+    result.textContent = answer.error;
+    result.hidden = false;
+    report = '';
+    return;
+  }
+  let content = '<h2>Результат подбора</h2>';
+  if (answer.specialist) content += '<p>' + answer.message + '</p>';
+  else {
+    content += formDescription(answer.candidates[0], p, answer);
+    if (answer.candidates.length > 1) content += '<h3>Альтернативы</h3>'
+      + answer.candidates.slice(1).map(id => '<details><summary>' + forms[id].name + '</summary>' + formDescription(id, p, answer) + '</details>').join('');
+    content += '<details><summary>Почему другие формы не предложены</summary>'
+      + Object.keys(answer.excluded).filter(id => answer.excluded[id].length)
+        .map(id => '<p><b>' + forms[id].name + '</b></p>' + list(answer.excluded[id])).join('') + '</details>'
+      + '<h3>Уточнения</h3>' + list(answer.warnings);
+  }
+  result.innerHTML = content;
+  // В отчёт включаем все альтернативы и введённые параметры.
+  const parameters = ['activity', 'scale', 'investment', 'liability'].map(id => {
+    const select = document.getElementById(id);
+    return document.querySelector('label[for="' + id + '"]').textContent + ': ' + select.options[select.selectedIndex].text;
+  }).join('\n');
+  result.hidden = false;
+  const header = 'ВЫБОР ФОРМЫ БИЗНЕСА\n' + parameters
+    + '\nУчредителей: ' + p.founders + '\nКапитал: ' + (p.capital === null ? 'не указан' : rubles(p.capital))
+    + '\nСовместное участие: ' + (p.teamwork ? 'да' : 'нет') + '\n\n';
+  // Раскрываем подробности для полного отчёта, затем сворачиваем обратно.
+  result.querySelectorAll('details').forEach(item => item.open = true);
+  report = header + result.innerText + '\n\nОсновные нормы сверены 14.11.2026.';
+  result.querySelectorAll('details').forEach(item => item.open = false);
+  result.insertAdjacentHTML('beforeend', '<div id="actions"><button type="button" id="save">Сохранить отчёт</button><button type="button" id="print">Распечатать</button></div>');
+  document.getElementById('save').onclick = saveReport;
+  document.getElementById('print').onclick = () => window.print();
+  result.hidden = false;
+}
+
+function saveReport() {
+  const url = URL.createObjectURL(new Blob(['\uFEFF', report], { type: 'text/plain;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Рекомендация-ОПФ.txt';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+form.addEventListener('submit', event => { event.preventDefault(); showRecommendation(); });
+function clearResult() { result.hidden = true; report = ''; }
+form.addEventListener('input', clearResult);
+form.addEventListener('change', clearResult);
+form.addEventListener('reset', clearResult);
+
+const examples = {
+  solo: ['services', 'small', 1, 'none', 'personal', '', false],
+  partners: ['production', 'medium', 3, 'partner', 'limited', 10000, false],
+  growth: ['it', 'large', 8, 'shares', 'limited', 10000, false]
+};
+document.querySelectorAll('[data-example]').forEach(button => button.onclick = function() {
+  const values = examples[this.dataset.example];
+  ['activity', 'scale', 'founders', 'investment', 'liability', 'capital'].forEach((id, index) => document.getElementById(id).value = values[index]);
+  document.getElementById('teamwork').checked = values[6];
+  showRecommendation();
+});
+document.getElementById('comparison-body').innerHTML = Object.values(forms).map(f =>
+  '<tr><th scope="row">' + f.name + '</th><td>' + f.people + '</td><td>' + f.capitalText
+  + '</td><td>' + f.risk + '</td><td>' + f.taxes + '</td></tr>').join('');
+let openBeforePrint = [];
+window.addEventListener('beforeprint', function() {
+  openBeforePrint = Array.from(result.querySelectorAll('details')).map(item => item.open);
+  result.querySelectorAll('details').forEach(item => item.open = true);
+});
+window.addEventListener('afterprint', function() {
+  result.querySelectorAll('details').forEach((item, index) => item.open = openBeforePrint[index]);
+});
+</script>
+</body>
+</html>
