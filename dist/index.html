@@ -38,15 +38,34 @@
 <option value="production">Производство</option>
 <option value="it">IT и цифровые продукты</option>
 <option value="agriculture">Сельское хозяйство</option>
+<optgroup label="Деятельность с особыми требованиями">
+<option value="alcohol_beer">Пиво, сидр, пуаре, медовуха — розница</option>
+<option value="alcohol_other">Вино и крепкий алкоголь — розница</option>
+<option value="medical">Медицинские услуги</option>
+<option value="pharmacy">Аптека и продажа лекарств</option>
+<option value="education">Образовательная деятельность</option>
+<option value="tutoring">Репетиторство лично без привлечения педагогов</option>
+<option value="security">Частная охрана</option>
+<option value="buses">Перевозка пассажиров автобусами</option>
+<option value="waste">Работа с отходами I–IV классов опасности</option>
+<option value="fire">Монтаж и обслуживание систем пожарной безопасности</option>
+</optgroup>
 <option value="regulated">Финансы, страхование и другие специальные отрасли</option>
 <option value="other">Другая деятельность</option>
 </select>
+<p class="note" id="activity-note" aria-live="polite" hidden></p>
 <label for="scale"><span class="number">02</span> Масштаб бизнеса</label>
 <select id="scale">
 <option value="small">Малый</option>
 <option value="medium">Средний</option>
 <option value="large">Крупный</option>
 </select>
+<details class="scale-help"><summary>Как выбрать масштаб</summary>
+<p>Общие ориентиры для анкеты: малый — до 100 работников и до 800 млн ₽ годового дохода, средний — до 250 работников и до 2 млрд ₽ дохода. Микробизнес (до 15 работников и до 120 млн ₽) здесь входит в малый.</p>
+<p>При разных категориях по двум показателям для подбора выбирайте большую. При превышении общего среднего порога выберите «Крупный». Для будущего дела используйте плановые значения.</p>
+<p>Это ориентиры анкеты, а не автоматическое установление статуса МСП. В законе есть отраслевые исключения и дополнительные условия. Статус действующей компании проверяйте в реестре ФНС.</p>
+</details>
+
 <label for="founders"><span class="number">03</span> Количество учредителей (включая вас)</label>
 <input id="founders" type="number" min="1" max="100000" step="1" value="1" required>
 <label for="investment"><span class="number">04</span> Привлечение инвестиций</label>
@@ -102,6 +121,10 @@
 <p>Веса отражают учебные предпочтения модели. Для малого бизнеса выше оцениваются простота управления и ИП, для среднего — ООО, для крупного — акционерные формы. Это не обязывает бизнес определённого масштаба выбирать конкретную форму. Оценка не является вероятностью успеха или подтверждением права на регистрацию.</p>
 <p>Капитал не меняет баллы: при нехватке средств рекомендация становится условной. Совместное участие влияет на допустимость кооператива. Для специальных отраслей автоматический подбор не выполняется. Для сельского хозяйства нужно отдельно рассмотреть КФХ и сельхозкооперативы.</p>
 </details>
+<details><summary>Лицензирование и масштаб бизнеса</summary>
+<p>В поле деятельности добавлены отдельные отрасли. Рядом с выбором и в результате появляются требования к лицензии и важные исключения. Для вина и крепкого алкоголя, частной охраны и общего образовательного сценария программа сначала предлагает уточнить специальные условия, а не назначает форму по общим баллам.</p>
+<p>Медицина, аптека, автобусы, работа с отходами I–IV классов и пожарные системы сохраняют общий рейтинг ОПФ с лицензионным предупреждением. Для баллов они относятся к услугам или торговле. Баллы не оценивают возможность получить лицензию.</p>
+</details>
 <details><summary>Источники</summary>
 <p>Основные нормы сверены 14.11.2026. Перед регистрацией проверьте действующие требования.</p>
 <ul>
@@ -112,7 +135,13 @@
 <li><a href="https://www.nalog.gov.ru/rn77/taxation/taxes/usn/" target="_blank" rel="noopener">ФНС: УСН</a></li>
 <li><a href="https://www.nalog.gov.ru/rn77/taxation/taxes/patent/" target="_blank" rel="noopener">ФНС: ПСН</a></li>
 <li><a href="https://npd.nalog.ru/" target="_blank" rel="noopener">ФНС: НПД</a></li>
+<li><a href="https://www.consultant.ru/document/cons_doc_LAW_113658/6a4a5b5468ba8b99831699f7d048d2a5d7710610/" target="_blank" rel="noopener">99-ФЗ, статья 12: перечень лицензируемой деятельности</a></li>
+<li><a href="https://www.consultant.ru/document/cons_doc_LAW_8368/d3618b9062472ca3182811e431fa7d71b532e447/" target="_blank" rel="noopener">171-ФЗ, статья 16: розничная продажа алкоголя</a></li>
+<li><a href="https://www.consultant.ru/document/cons_doc_LAW_140174/dda3cee5868d1739eb34ccd9e8a98085fa2c76e2/" target="_blank" rel="noopener">273-ФЗ, статья 91: образовательная лицензия и исключения</a></li>
+<li><a href="https://www.rosguard.gov.ru/page/index/voprosy-chastnoj-oxrannoj-deyatelnosti" target="_blank" rel="noopener">Росгвардия: частная охранная деятельность</a></li>
+<li><a href="https://www.nalog.gov.ru/rn77/related_activities/regbusiness/reestrquetoin/" target="_blank" rel="noopener">ФНС: критерии малого и среднего бизнеса</a></li>
 </ul>
+<p>Отраслевые положения и ориентиры масштаба проверены 16.11.2026. Перед запуском бизнеса уточните действующие требования к конкретным работам и региону.</p>
 </details>
 </section>
 
@@ -219,13 +248,39 @@ const scoring = {
   }
 };
 
+
+// Отраслевые требования проверяются отдельно от баллов ОПФ.
+const activityProfiles = {
+  alcohol_beer: {label:'Розничная продажа пива, сидра, пуаре, медовухи',base:'trade',
+    notice:'Для розничной продажи пива, пивных напитков, сидра, пуаре и медовухи алкогольная лицензия не требуется. ИП допустим, но сохраняются требования к обороту, учёту, маркировке, месту и времени продажи. Это исключение не распространяется на любой слабоалкогольный напиток.'},
+  alcohol_other: {label:'Розничная продажа вина и крепкого алкоголя',base:'trade',review:true,
+    notice:'Для обычного розничного магазина с вином и крепким алкоголем нужна организация и лицензия. ИП по общему правилу не подходит. ООО можно рассмотреть как ориентир, но нужно проверить региональные требования к капиталу, торговому объекту и лицензии. Исключения для сельхозпроизводителей собственного вина требуют отдельного анализа.'},
+  medical: {label:'Медицинские услуги',base:'services',
+    notice:'Медицинская деятельность по лицензируемым работам требует лицензии. До начала работы проверьте перечень услуг, квалификацию персонала, помещения и оборудование. Общая рекомендация ОПФ не подтверждает выполнение лицензионных требований.'},
+  pharmacy: {label:'Аптека и розничная продажа лекарств',base:'trade',
+    notice:'Для аптечной торговли лекарствами требуется лицензия на фармацевтическую деятельность. Проверьте требования к руководителю или ИП, специалистам, помещениям и хранению. Рекомендация ОПФ не подтверждает право продавать лекарства.'},
+  education: {label:'Образовательная деятельность',base:'services',review:true,
+    notice:'Образовательная деятельность обычно требует лицензии. Для ИП, который обучает непосредственно сам, предусмотрено исключение. Вид образования и программы влияют на допустимую организацию: сначала уточните их. Репетиторство без привлечения педагогов выделено отдельным вариантом.'},
+  tutoring: {label:'Репетиторство лично без привлечения педагогов',base:'services',
+    notice:'ИП, который ведёт образовательную деятельность непосредственно сам, освобождён от её лицензирования. Это исключение не переносится автоматически на ООО или на обучение с привлечёнными педагогами. При изменении модели работы проверьте лицензионные требования.'},
+  security: {label:'Частная охранная деятельность',base:'services',review:true,
+    notice:'Для частной охранной деятельности нужна специально созданная организация в форме ООО и лицензия. ИП, АО и кооператив для этой роли не подходят. Требования к капиталу, участникам и видам охранных услуг требуют отдельной проверки, поэтому общий балльный подбор здесь не выполняется.'},
+  buses: {label:'Перевозка пассажиров автобусами',base:'services',
+    notice:'Перевозка пассажиров и иных лиц автобусами подлежит лицензированию с установленными законом исключениями. Проверьте включение автобусов в реестр, требования к водителям и безопасности. Этот пункт не относится автоматически ко всем перевозкам или такси.'},
+  waste: {label:'Работа с отходами I–IV классов опасности',base:'services',
+    notice:'Лицензия требуется для сбора, транспортирования, обработки, утилизации, обезвреживания и размещения отходов I–IV классов опасности. Требование зависит от выполняемых операций и класса отходов; его нельзя переносить на любую уборку или любой мусор.'},
+  fire: {label:'Монтаж и обслуживание систем пожарной безопасности',base:'services',
+    notice:'Монтаж, техническое обслуживание и ремонт средств обеспечения пожарной безопасности зданий и сооружений относятся к лицензируемой деятельности. Уточните конкретные работы и требования МЧС до их выполнения.'}
+};
+
 function scoreCandidate(id, p) {
   const values = {
     ...p,
+    activity: activityProfiles[p.activity]?.base || p.activity,
     founders: p.founders === 1 ? 'one' : p.founders <= 4 ? 'few' : p.founders <= 50 ? 'group' : 'many'
   };
   const details = Object.entries(scoring).map(([key, rule]) => ({
-    label: rule.label, value: rule.titles[values[key]],
+    label: rule.label, value: key === 'activity' && activityProfiles[p.activity] ? activityProfiles[p.activity].label : rule.titles[values[key]],
     points: rule.points[values[key]][id], max: rule.max
   }));
   return { total: details.reduce((sum, item) => sum + item.points, 0), details };
@@ -240,8 +295,10 @@ function recommend(p) {
   if (p.activity === 'regulated')
     return { specialist: true, message: 'Нужна отраслевая проверка. Уточните точный вид деятельности, требования регулятора к форме и капиталу, лицензирование и состав учредителей.' };
 
+  const activityProfile = Object.hasOwn(activityProfiles, p.activity) ? activityProfiles[p.activity] : null;
+  if (activityProfile?.review) return { specialist: true, message: activityProfile.notice };
   for (const key of ['activity', 'scale', 'investment', 'liability']) {
-    if (!Object.hasOwn(scoring[key].points, p[key]))
+    if (!Object.hasOwn(scoring[key].points, key === 'activity' && activityProfile ? activityProfile.base : p[key]))
       return { error: 'Выберите допустимые значения параметров.' };
   }
   if (typeof p.teamwork !== 'boolean')
@@ -293,10 +350,19 @@ function recommend(p) {
   ];
   if (p.activity === 'agriculture') warnings.push('Для сельского хозяйства дополнительно рассмотрите КФХ, сельхозкооператив и условия ЕСХН.');
   if (p.activity === 'other') warnings.push('Уточните ОКВЭД, допустимые формы и лицензирование для конкретного вида деятельности.');
+  if (activityProfile) warnings.unshift(activityProfile.notice);
   return { candidates, excluded, reasons, warnings, scores, scoreDetails, tied };
 }
 
 const form = document.getElementById('form');
+function updateActivityNote() {
+  const note = document.getElementById('activity-note');
+  const key = document.getElementById('activity').value;
+  note.textContent = Object.hasOwn(activityProfiles, key) ? activityProfiles[key].notice : '';
+  note.hidden = !note.textContent;
+}
+document.getElementById('activity').addEventListener('change', updateActivityNote);
+form.addEventListener('reset', () => { document.getElementById('activity-note').hidden = true; });
 const result = document.getElementById('result');
 let report = '';
 const rubles = value => value.toLocaleString('ru-RU') + ' ₽';
@@ -354,7 +420,7 @@ function showRecommendation() {
     content += '<details><summary>Почему другие формы не предложены</summary>'
       + Object.keys(answer.excluded).filter(id => answer.excluded[id].length)
         .map(id => '<p><b>' + forms[id].name + '</b></p>' + list(answer.excluded[id])).join('') + '</details>'
-      + '<h3>Уточнения</h3>' + list(answer.warnings);
+      + '<h3>Лицензии и уточнения</h3>' + list(answer.warnings);
   }
   result.innerHTML = content;
   // В отчёт включаем все альтернативы и введённые параметры.
@@ -401,6 +467,7 @@ document.querySelectorAll('[data-example]').forEach(button => button.onclick = f
   const values = examples[this.dataset.example];
   ['activity', 'scale', 'founders', 'investment', 'liability', 'capital'].forEach((id, index) => document.getElementById(id).value = values[index]);
   document.getElementById('teamwork').checked = values[6];
+  updateActivityNote();
   showRecommendation();
 });
 document.getElementById('comparison-body').innerHTML = Object.values(forms).map(f =>
