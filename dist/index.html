@@ -11,6 +11,8 @@
 @media(max-width:800px){.wrap{width:calc(100% - 36px)}.header{height:85px}.header nav{display:none}.hero{grid-template-columns:1fr;min-height:350px;padding:40px 0}.art{display:none}h1{font-size:49px}.workspace{grid-template-columns:1fr}.result-area{border-left:0;border-top:1px solid #d3dec6}.empty{min-height:460px;padding:25px}.paper-stack{height:195px;margin:15px 0 0;transform:scale(.75);transform-origin:top center}.empty .eyebrow{align-self:center}.empty h3{font-size:25px}.empty p{margin-bottom:0}.promises{flex-direction:row;font-size:10px;gap:20px;margin-top:15px;padding-top:15px}.empty-bottom{display:none}.section-heading p{display:none}.section-heading h2{font-size:26px}#form label{font-size:13px}select,input[type=number]{font-size:13px}.below p{font-size:10px}.footer{align-items:flex-start;flex-direction:column}.footer p{margin:0}.about{font-size:11px;padding:8px 12px}.instructions{padding-top:35px}.hero p{font-size:13px}.brand{font-size:22px}.meta{font-size:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 @media print{body{background:white;color:black}.header,.hero,#selector-title,#form,.empty,.below,.examples,#comparison,.instructions,.footer,.result-area:has(#result[hidden]),#actions{display:none!important}.wrap{width:100%;margin:0}.workspace{display:block;border:0;box-shadow:none}.result-area{background:white;border:0}#result{padding:0;font-size:11pt;color:black}#result h3{font-size:18pt}#result h2{font-size:14pt}.section-number{display:none}#result details{break-inside:avoid}}
+
+.score{margin:10px 0 14px!important;font-size:14px}.score-details{margin-top:0!important;padding-top:4px!important}
 </style>
 </head>
 
@@ -95,8 +97,10 @@
 <h2>Как пользоваться</h2>
 <p>Выберите пять параметров, при желании уточните капитал и совместный труд. Нажмите «Подобрать форму бизнеса». Изучите причины выбора, преимущества, ограничения и альтернативы. Результат можно сохранить в TXT или распечатать. После изменения параметров повторите подбор.</p>
 <details><summary>Как работает алгоритм</summary>
-<p>Сначала исключаются несовместимые варианты: учитываются число участников, ответственность и способ инвестирования. Затем выбирается основной вариант. Для небольшого самостоятельного дела модель предпочитает ИП, для совместного труда пяти и более участников — кооператив, для долевого участия — ООО, для акций — АО или ПАО. Деятельность и масштаб уточняют предпочтения. Остальные допустимые формы показываются как альтернативы.</p>
-<p>Это учебные предпочтения, а не запрет работать в другой допустимой форме. Для финансовых и специальных отраслей автоматический выбор не выполняется. В сельском хозяйстве дополнительно рассматривают КФХ и сельхозкооператив; они не входят в общий рейтинг.</p>
+<p>Сначала программа проверяет ограничения и исключает несовместимые варианты. Для каждой оставшейся формы она складывает баллы пяти критериев: деятельность — до 20, масштаб — до 30, учредители — до 15, инвестиции — до 20, ответственность — до 15. Максимум — 100 баллов.</p>
+<p>Основной становится форма с наибольшей суммой, остальные показываются как альтернативы в порядке убывания баллов. При равенстве действует порядок: ИП, ООО, АО, ПАО, кооператив. Программа явно сообщает о равенстве.</p>
+<p>Веса отражают учебные предпочтения модели. Для малого бизнеса выше оцениваются простота управления и ИП, для среднего — ООО, для крупного — акционерные формы. Это не обязывает бизнес определённого масштаба выбирать конкретную форму. Оценка не является вероятностью успеха или подтверждением права на регистрацию.</p>
+<p>Капитал не меняет баллы: при нехватке средств рекомендация становится условной. Совместное участие влияет на допустимость кооператива. Для специальных отраслей автоматический подбор не выполняется. Для сельского хозяйства нужно отдельно рассмотреть КФХ и сельхозкооперативы.</p>
 </details>
 <details><summary>Источники</summary>
 <p>Основные нормы сверены 14.11.2026. Перед регистрацией проверьте действующие требования.</p>
@@ -159,7 +163,75 @@ forms.coop = {
   risk: 'Субсидиарная', taxes: 'ОСНО; УСН при соблюдении условий'
 };
 
-// Сначала проверяем ограничения, затем выбираем предпочтительный вариант.
+
+// Учебные веса: деятельность 20, масштаб 30, учредители 15,
+// инвестиции 20, ответственность 15. Сумма максимумов — 100.
+// Баллы сравнивают допустимые формы, а не вероятность успеха.
+const scoring = {
+  activity: {
+    label: 'Вид деятельности', max: 20,
+    titles: {services:'Услуги',trade:'Торговля',production:'Производство',it:'IT и цифровые продукты',agriculture:'Сельское хозяйство',other:'Другая деятельность'},
+    points: {
+      services:    {ip:20,llc:16,ao:8,pao:8,coop:10},
+      trade:       {ip:17,llc:20,ao:10,pao:10,coop:10},
+      production:  {ip:0,llc:20,ao:16,pao:16,coop:20},
+      it:          {ip:20,llc:18,ao:16,pao:16,coop:8},
+      agriculture: {ip:14,llc:18,ao:12,pao:12,coop:0},
+      other:       {ip:10,llc:10,ao:10,pao:10,coop:10}
+    }
+  },
+  scale: {
+    label:'Масштаб',max:30,
+    titles:{small:'Малый',medium:'Средний',large:'Крупный'},
+    points:{
+      small:  {ip:30,llc:24,ao:8,pao:5,coop:26},
+      medium: {ip:5,llc:30,ao:22,pao:20,coop:24},
+      large:  {ip:0,llc:22,ao:30,pao:30,coop:14}
+    }
+  },
+  founders: {
+    label:'Учредители',max:15,
+    titles:{one:'Один',few:'От 2 до 4',group:'От 5 до 50',many:'Больше 50'},
+    points:{
+      one:   {ip:15,llc:12,ao:8,pao:8,coop:0},
+      few:   {ip:0,llc:15,ao:10,pao:10,coop:0},
+      group: {ip:0,llc:15,ao:12,pao:12,coop:15},
+      many:  {ip:0,llc:0,ao:15,pao:15,coop:15}
+    }
+  },
+  investment: {
+    label:'Инвестиции',max:20,
+    titles:{none:'Свои средства или кредит',partner:'Инвестор через долю',shares:'Частные акции',public:'Публичное размещение акций'},
+    points:{
+      none:    {ip:20,llc:16,ao:6,pao:0,coop:20},
+      partner: {ip:0,llc:20,ao:14,pao:0,coop:0},
+      shares:  {ip:0,llc:0,ao:20,pao:0,coop:0},
+      public:  {ip:0,llc:0,ao:0,pao:20,coop:0}
+    }
+  },
+  liability: {
+    label:'Ответственность',max:15,
+    titles:{limited:'Ограничить риск вкладом',personal:'Готовность к личной ответственности'},
+    points:{
+      limited: {ip:0,llc:15,ao:15,pao:15,coop:0},
+      personal:{ip:15,llc:10,ao:10,pao:10,coop:15}
+    }
+  }
+};
+
+function scoreCandidate(id, p) {
+  const values = {
+    ...p,
+    founders: p.founders === 1 ? 'one' : p.founders <= 4 ? 'few' : p.founders <= 50 ? 'group' : 'many'
+  };
+  const details = Object.entries(scoring).map(([key, rule]) => ({
+    label: rule.label, value: rule.titles[values[key]],
+    points: rule.points[values[key]][id], max: rule.max
+  }));
+  return { total: details.reduce((sum, item) => sum + item.points, 0), details };
+}
+
+// Сначала ограничения, затем балльный рейтинг допустимых форм.
 function recommend(p) {
   if (!Number.isInteger(p.founders) || p.founders < 1 || p.founders > 100000)
     return { error: 'Введите целое число учредителей от 1 до 100 000.' };
@@ -167,6 +239,13 @@ function recommend(p) {
     return { error: 'Введите неотрицательный капитал до 1 000 000 000 000 рублей или оставьте поле пустым.' };
   if (p.activity === 'regulated')
     return { specialist: true, message: 'Нужна отраслевая проверка. Уточните точный вид деятельности, требования регулятора к форме и капиталу, лицензирование и состав учредителей.' };
+
+  for (const key of ['activity', 'scale', 'investment', 'liability']) {
+    if (!Object.hasOwn(scoring[key].points, p[key]))
+      return { error: 'Выберите допустимые значения параметров.' };
+  }
+  if (typeof p.teamwork !== 'boolean')
+    return { error: 'Проверьте условие совместного участия.' };
 
   const excluded = {};
   const reasons = {};
@@ -195,18 +274,18 @@ function recommend(p) {
   reasons.pao = ['Вы планируете публичное размещение акций.'];
   reasons.coop = ['Есть минимум 5 членов и подтверждено совместное участие.', 'Вы допускаете личную, в том числе субсидиарную, ответственность.'];
 
-  let preferred = 'llc';
-  if (p.investment === 'public') preferred = 'pao';
-  else if (p.investment === 'shares' || p.founders > 50) preferred = 'ao';
-  else if (!excluded.coop.length && p.activity === 'production') preferred = 'coop';
-  else if (!excluded.ip.length && p.scale === 'small' && p.activity !== 'production') preferred = 'ip';
-
-  const candidates = Object.keys(forms).filter(id => !excluded[id].length);
-  // Переносим предпочтительный вариант в начало, остальные оставляем альтернативами.
-  candidates.sort((a, b) => (b === preferred ? 1 : 0) - (a === preferred ? 1 : 0));
-  const main = candidates[0];
-  if (p.activity === 'production') reasons[main].push('Для производства модель предпочитает отдельную компанию или кооператив с собственным имуществом.');
-  if (p.scale !== 'small') reasons[main].push('Для среднего и крупного бизнеса модель предпочитает корпоративную структуру. Масштаб сам по себе не обязывает к АО.');
+  const order = Object.keys(forms);
+  const candidates = order.filter(id => !excluded[id].length);
+  const scores = {};
+  const scoreDetails = {};
+  for (const id of candidates) {
+    const evaluation = scoreCandidate(id, p);
+    scores[id] = evaluation.total;
+    scoreDetails[id] = evaluation.details;
+  }
+  // При равных баллах сохраняем заранее объявленный порядок форм.
+  candidates.sort((a, b) => scores[b] - scores[a] || order.indexOf(a) - order.indexOf(b));
+  const tied = candidates.filter(id => scores[id] === scores[candidates[0]]);
   const warnings = [
     'Ограниченная ответственность имеет исключения, включая личные поручительства и субсидиарную ответственность.',
     'Общий минимум капитала не равен бюджету запуска. Для отдельных отраслей требования выше.',
@@ -214,7 +293,7 @@ function recommend(p) {
   ];
   if (p.activity === 'agriculture') warnings.push('Для сельского хозяйства дополнительно рассмотрите КФХ, сельхозкооператив и условия ЕСХН.');
   if (p.activity === 'other') warnings.push('Уточните ОКВЭД, допустимые формы и лицензирование для конкретного вида деятельности.');
-  return { candidates, excluded, reasons, warnings };
+  return { candidates, excluded, reasons, warnings, scores, scoreDetails, tied };
 }
 
 const form = document.getElementById('form');
@@ -240,7 +319,12 @@ function formDescription(id, p, answer) {
   let capitalNote = '';
   if (p.capital !== null && p.capital < f.capital)
     capitalNote = '<p><b>Рекомендация условная:</b> до общего минимума капитала недостаёт ' + rubles(f.capital - p.capital) + '. Предусмотрите эти средства.</p>';
-  return '<h3>' + f.name + '</h3><p>' + f.description + '</p>'
+  const score = '<p class="score"><b>Баллы: ' + answer.scores[id] + ' из 100</b></p>'
+    + '<details class="score-details"><summary>Как начислены баллы</summary>'
+    + list(answer.scoreDetails[id].map(item => item.label + ' («' + item.value + '»): '
+      + item.points + ' из ' + item.max))
+    + '<p>Сумма пяти критериев. Исключённые формы не участвуют в рейтинге. Капитал проверяется отдельно, совместное участие определяет допустимость кооператива.</p></details>';
+  return '<h3>' + f.name + '</h3>' + score + '<p>' + f.description + '</p>'
     + '<p><b>Участники:</b> ' + f.people + '. <b>Капитал:</b> ' + f.capitalText + '.</p>'
     + capitalNote + '<b>Почему подходит:</b>' + list(answer.reasons[id])
     + '<b>Преимущества:</b>' + list(f.advantages)
@@ -261,8 +345,12 @@ function showRecommendation() {
   if (answer.specialist) content += '<p>' + answer.message + '</p>';
   else {
     content += formDescription(answer.candidates[0], p, answer);
+    content += '<p class="note">Баллы — учебная оценка по выбранным критериям, а не вероятность успеха и не юридическая гарантия.</p>';
+    if (answer.tied.length > 1) content += '<p>Равный результат: '
+      + answer.tied.map(id => forms[id].name).join(', ')
+      + '. Первый вариант показан по фиксированному порядку: ИП, ООО, АО, ПАО, кооператив. Равные баллы не означают преимущество первого.</p>';
     if (answer.candidates.length > 1) content += '<h3>Альтернативы</h3>'
-      + answer.candidates.slice(1).map(id => '<details><summary>' + forms[id].name + '</summary>' + formDescription(id, p, answer) + '</details>').join('');
+      + answer.candidates.slice(1).map(id => '<details><summary>' + forms[id].name + ' — ' + answer.scores[id] + ' балл.</summary>' + formDescription(id, p, answer) + '</details>').join('');
     content += '<details><summary>Почему другие формы не предложены</summary>'
       + Object.keys(answer.excluded).filter(id => answer.excluded[id].length)
         .map(id => '<p><b>' + forms[id].name + '</b></p>' + list(answer.excluded[id])).join('') + '</details>'
